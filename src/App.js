@@ -8,6 +8,20 @@ import Layout from './components/layout/Layout';
 //notes - dont forget / before the pathname
 
 function App() {
+
+  const DummyQuotes = [
+    {
+      id: "p1",
+      author: "Sarah",
+      text: "Learn React With React",
+    },
+    {
+      id: 'p2',
+      author: 'Emily',
+      text: 'Learn With Udemy'
+    }
+  ];
+
   return (
     <Layout> {/*  Layout wrapper */}
       <Switch>
@@ -15,10 +29,10 @@ function App() {
           <Redirect to="/quotes" />
         </Route>
         <Route path="/quotes" exact>
-          <AllQuotes />
+          <AllQuotes dummyData={DummyQuotes}/>
         </Route>
         <Route path="/quotes/:quoteId">
-          <QuoteDetails />
+          <QuoteDetails quoteData={DummyQuotes}/>
         </Route>
         <Route path="/new-quote">
           <AddQuotes />

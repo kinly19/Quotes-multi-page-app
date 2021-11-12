@@ -4,6 +4,12 @@ import { useParams, Route, Link } from "react-router-dom";
 import HighlightedQuote from "../components/quotes/HighlightedQuote";
 import Comments from "../components/comments/Comments";
 
+// ======================================= Notes =======================================
+// useRouteMatch () - hook attempts to match the current URL in the same way that a <Route> would
+// find() – search through all the child elements only.
+// filter() – search through all the elements.
+//======================================================================================
+
 const QuoteDetails = (props) => {
 
   const params = useParams();

@@ -1,10 +1,18 @@
-import { useRef } from 'react';
-
+import { useRef, useState, Fragment } from 'react';
+import { Prompt } from 'react-router';
 import Card from '../UI/Card';
 import LoadingSpinner from '../UI/LoadingSpinner';
 import classes from './QuoteForm.module.css';
 
+// ================================ Notes ================================
+// https://v5.reactrouter.com/core/api/Prompt
+// <Prompt> - Used to prompt the user before navigating away from a page
+//  requires two props, when: bool & message: string
+// =======================================================================
+
 const QuoteForm = (props) => {
+
+  const [isFocus, setIsFocus] = useState(false);
   const authorInputRef = useRef();
   const textInputRef = useRef();
 
@@ -17,30 +25,51 @@ const QuoteForm = (props) => {
     // optional: Could validate here
 
     props.onAddQuote({ author: enteredAuthor, text: enteredText });
+    // passed down via prop inside addQuotes
   }
 
-  return (
-    <Card>
-      <form className={classes.form} onSubmit={submitFormHandler}>
-        {props.isLoading && (
-          <div className={classes.loading}>
-            <LoadingSpinner />
-          </div>
-        )}
+  const formFocusHandler = () => {
+    setIsFocus(true);
+  };
 
-        <div className={classes.control}>
-          <label htmlFor='author'>Author</label>
-          <input type='text' id='author' ref={authorInputRef} />
-        </div>
-        <div className={classes.control}>
-          <label htmlFor='text'>Text</label>
-          <textarea id='text' rows='5' ref={textInputRef}></textarea>
-        </div>
-        <div className={classes.actions}>
-          <button className='btn'>Add Quote</button>
-        </div>
-      </form>
-    </Card>
+  const formUnfocusHandler = () => {
+    setIsFocus(false);
+  };
+
+  return (
+    <Fragment>
+      <Prompt
+        when={isFocus}
+        message={
+          'Are you sure you want to leave? All your entered data will be lost'
+        }
+      />
+      <Card>
+        <form
+          onFocus={formFocusHandler}
+          className={classes.form}
+          onSubmit={submitFormHandler}
+        >
+          {props.isLoading && (
+            <div className={classes.loading}>
+              <LoadingSpinner />
+            </div>
+          )}
+
+          <div className={classes.control}>
+            <label htmlFor='author'>Author</label>
+            <input type='text' id='author' ref={authorInputRef} />
+          </div>
+          <div className={classes.control}>
+            <label htmlFor='text'>Text</label>
+            <textarea id='text' rows='5' ref={textInputRef}></textarea>
+          </div>
+          <div className={classes.actions}>
+            <button onClick={formUnfocusHandler} className='btn'>Add Quote</button>
+          </div>
+        </form>
+      </Card>
+    </Fragment>
   );
 };
 

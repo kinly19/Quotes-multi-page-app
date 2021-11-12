@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { useParams, Route, Link } from "react-router-dom";
+import { useParams, Route, Link, useRouteMatch } from "react-router-dom";
 
 import HighlightedQuote from "../components/quotes/HighlightedQuote";
 import Comments from "../components/comments/Comments";
@@ -11,11 +11,9 @@ import Comments from "../components/comments/Comments";
 //======================================================================================
 
 const QuoteDetails = (props) => {
-
+  
+  const match = useRouteMatch();
   const params = useParams();
-
-  //find() – search through all the child elements only.
-  //filter() – search through all the elements.
   const quote = props.quoteData.find(quote => quote.id === params.quoteId);
   
   if(!quote){
@@ -28,11 +26,13 @@ const QuoteDetails = (props) => {
     <Fragment>
       <HighlightedQuote author={quote.author} text={quote.text}/>
       <div className='centered'>
-        <Route path={`/quotes/${params.quoteId}`} exact> {/* only if this path matches we render Link */}
-          <Link className='btn--flat' to={`/quotes/${params.quoteId}/comments`}>Load Comments</Link>
+        {/* without useRouteMatch hook */}
+        {/* <Route path={`/quotes/${params.quoteId}`} exact> */}
+        <Route path={match.path} exact> {/* only if this path matches we render Link */}
+          <Link className='btn--flat' to={`${match.url}/comments`}>Load Comments</Link> {/* match the url then append /comments */}
         </Route>
       </div>
-      <Route path={`/quotes/:quoteId/comments`}> {/* when we hit this route, render comments component */}
+      <Route path={`${match.path}/comments`}> {/* when we hit this route, render comments component */}
         <Comments />
       </Route>
     </Fragment>

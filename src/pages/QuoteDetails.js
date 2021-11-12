@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { useParams, Route } from "react-router-dom";
+import { useParams, Route, Link } from "react-router-dom";
 
 import HighlightedQuote from "../components/quotes/HighlightedQuote";
 import Comments from "../components/comments/Comments";
@@ -21,7 +21,12 @@ const QuoteDetails = (props) => {
   return (
     <Fragment>
       <HighlightedQuote author={quote.author} text={quote.text}/>
-      <Route path="/quotes/:quoteId/comments">
+      <div className='centered'>
+        <Route path={`/quotes/${params.quoteId}`} exact> {/* only if this path matches we render Link */}
+          <Link className='btn--flat' to={`/quotes/${params.quoteId}/comments`}>Load Comments</Link>
+        </Route>
+      </div>
+      <Route path={`/quotes/:quoteId/comments`}> {/* when we hit this route, render comments component */}
         <Comments />
       </Route>
     </Fragment>

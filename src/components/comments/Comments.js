@@ -23,7 +23,11 @@ const Comments = () => {
   const startAddCommentHandler = () => {
     setIsAddingComment(true);
   };
-  
+
+  const addedCommentHandler = useCallback(() => {
+    sendRequest(quoteId);
+  },[sendRequest, quoteId]);
+
   let comments;
   if (status === "pending") {
     comments = (
@@ -40,6 +44,7 @@ const Comments = () => {
   if (status === 'completed' && (!loadedComments || loadedComments.length === 0)) {
     comments = <p className='centered'> No Comments Were Added Yet!</p>;
   }
+  
   return (
     <section className={classes.comments}>
       <h2>User Comments</h2>

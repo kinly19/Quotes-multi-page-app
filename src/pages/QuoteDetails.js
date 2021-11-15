@@ -1,8 +1,10 @@
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 import { useParams, Route, Link, useRouteMatch } from "react-router-dom";
-
 import HighlightedQuote from "../components/quotes/HighlightedQuote";
 import Comments from "../components/comments/Comments";
+import useHttp from "../hooks/use-http";
+import { getSingleQuote } from "../lib/api";
+import LoadingSpinner from "../components/UI/LoadingSpinner";
 
 // ======================================= Notes =======================================
 // useRouteMatch () - hook attempts to match the current URL in the same way that a <Route> would
@@ -11,20 +13,34 @@ import Comments from "../components/comments/Comments";
 //======================================================================================
 
 const QuoteDetails = (props) => {
-  
+
   const match = useRouteMatch();
   const params = useParams();
-  const quote = props.quoteData.find(quote => quote.id === params.quoteId);
+  // const quote = props.quoteData.find(quote => quote.id === params.quoteId);
+  const { quoteId } = params;
+  const { sendRequest, status, data: loadedQuote, error } = useHttp(getSingleQuote, true);
+
+  useEffect(() => {
+    sendRequest(quoteId);
+  },[sendRequest, quoteId]);
+
+  if(status === 'pending') { 
+    return <div className='centered'>
+      <LoadingSpinner />
+    </div>
+  };
+
+  if(error){
+    return <p className='centered'>{error}</p>
+  };
   
-  if(!quote){
+  if(!loadedQuote.text){
     return <p>No Quote Found</p>
   };
 
-  console.log(quote);
-
   return (
     <Fragment>
-      <HighlightedQuote author={quote.author} text={quote.text}/>
+      <HighlightedQuote author={loadedQuote.author} text={loadedQuote.text}/>
       <div className='centered'>
         {/* without useRouteMatch hook */}
         {/* <Route path={`/quotes/${params.quoteId}`} exact> */}

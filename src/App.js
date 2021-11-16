@@ -1,12 +1,14 @@
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Routes, Navigate, Link } from 'react-router-dom';
 
 import AllQuotes from './pages/AllQuotes';
 import QuoteDetails from './pages/QuoteDetails';
 import AddQuotes from './pages/AddQuotes';
 import Layout from './components/layout/Layout';
 import NotFound from './pages/NotFound';
+import Comments from './components/comments/Comments';
 
-//notes - dont forget / before the pathname
+// notes - dont forget / before the pathname
+// Navigate replaces redirect - react router v6
 
 function App() {
 
@@ -25,23 +27,25 @@ function App() {
 
   return (
     <Layout> {/*  Layout wrapper */}
-      <Switch>
-        <Route path="/" exact>
-          <Redirect to="/quotes" />
+      <Routes> {/* v5 uses switch */}
+        <Route path="/" element={<Navigate replace to= '/quotes'/>}/>
+        <Route path="/quotes" element={<AllQuotes />}/>
+        <Route path="/quotes/:quoteId" element={<QuoteDetails quoteData={DummyQuotes}/>}>
+        <Route
+            path=''
+            element={
+              <div className='centered'>
+                <Link className='btn--flat' to='comments'>
+                  Load Comments
+                </Link>
+              </div>
+            }
+          />
+          <Route path='comments' element={<Comments />} />
         </Route>
-        <Route path="/quotes" exact>
-          <AllQuotes dummyData={DummyQuotes}/>
-        </Route>
-        <Route path="/quotes/:quoteId">
-          <QuoteDetails quoteData={DummyQuotes}/>
-        </Route>
-        <Route path="/new-quote">
-          <AddQuotes />
-        </Route>
-        <Route path='*'>
-          <NotFound />
-        </Route>
-      </Switch>
+        <Route path="/new-quote"  element={ <AddQuotes />}/>
+        <Route path='*' element={<NotFound />}/>
+      </Routes>
     </Layout>
   );
 }

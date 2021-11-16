@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import QuoteItem from './QuoteItem';
 import classes from './QuoteList.module.css';
@@ -25,7 +25,7 @@ const QuoteList = (props) => {
     });
   };
 
-  const history = useHistory();
+  const history = useNavigate();
   const location = useLocation();
 
   const queryParams = new URLSearchParams(location.search);
